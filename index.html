@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f5f7">
+  <title>Coco Finanzas</title>
+  <!-- Para que se pueda instalar como app en el celular -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="img/icon-192.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Coco Finanzas">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Manchas suaves de color que se mueven en el fondo -->
+  <div class="fondo-animado" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <!-- ===== Barra de arriba ===== -->
+  <header class="topbar">
+    <div class="marca">
+      <img src="img/logo.png" alt="Coco" class="logo"
+           onerror="this.outerHTML='<span class=&quot;logo emoji&quot;>🥥</span>'">
+      <div class="marca-texto">
+        <small id="saludo">Hola, Coco</small>
+        <span>Coco <b>Finanzas</b></span>
+      </div>
+    </div>
+    <div class="topbar-der">
+      <span id="mes-actual" class="chip"></span>
+      <button class="icono-btn" id="btn-ajustes" aria-label="Ajustes y respaldo"><span data-ico="ajustes"></span></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- =================== INICIO =================== -->
+    <section class="vista activa" id="vista-inicio">
+      <div class="consejo" style="--d:0">
+        <img src="img/logo.png" alt="" class="coco-mini"
+             onerror="this.outerHTML='<span class=&quot;coco-mini emoji&quot;>🥥</span>'">
+        <p id="consejo-texto" class="burbuja"></p>
+      </div>
+
+      <div class="kpis">
+        <article class="kpi" style="--d:1">
+          <div class="kpi-top"><span>Ingresos del mes</span><i class="ico verde" data-ico="sube"></i></div>
+          <strong id="k-ingresos">$0.00</strong>
+          <small id="k-ingresos-sub"></small>
+        </article>
+        <article class="kpi" style="--d:2">
+          <div class="kpi-top"><span>Gastos del mes</span><i class="ico rojo" data-ico="baja"></i></div>
+          <strong id="k-gastos">$0.00</strong>
+          <small id="k-gastos-sub"></small>
+        </article>
+        <article class="kpi destacado" style="--d:3">
+          <div class="kpi-top"><span>Disponible real</span><i class="ico" data-ico="dinero"></i></div>
+          <strong id="k-disponible">$0.00</strong>
+          <small>ingresos − gastos (incluye crédito)</small>
+        </article>
+        <article class="kpi" style="--d:4">
+          <div class="kpi-top"><span>Debo en Nu</span><i class="ico azul" data-ico="tarjeta"></i></div>
+          <strong id="k-deuda">$0.00</strong>
+          <small id="k-deuda-sub"></small>
+        </article>
+      </div>
+
+      <div class="grid2">
+        <article class="panel" style="--d:5">
+          <h2>¿En qué se va mi dinero?</h2>
+          <div class="dona-wrap">
+            <svg id="dona" viewBox="0 0 120 120"></svg>
+            <div class="dona-centro">
+              <small id="dona-etq">Gastado este mes</small>
+              <b id="dona-total">$0.00</b>
+            </div>
+          </div>
+          <ul id="leyenda" class="leyenda"></ul>
+        </article>
+
+        <article class="panel" style="--d:6">
+          <div class="panel-top">
+            <h2>Tarjeta Nu</h2>
+            <button class="link" data-ir="tarjeta">Ver detalle →</button>
+          </div>
+          <div id="nu-mini"></div>
+        </article>
+      </div>
+
+      <article class="panel" style="--d:7">
+        <div class="panel-top">
+          <h2>Últimos movimientos</h2>
+          <button class="link" data-ir="historial">Ver todo →</button>
+        </div>
+        <ul id="lista-recientes" class="lista"></ul>
+      </article>
+    </section>
+
+    <!-- =================== TARJETA =================== -->
+    <section class="vista" id="vista-tarjeta">
+      <article class="panel" style="--d:0">
+        <div class="panel-top">
+          <h2>Tarjeta Nu</h2>
+          <div class="botones">
+            <button class="btn-sec chico" data-abrir-config><span data-ico="ajustes"></span>Configurar</button>
+            <button class="btn chico" data-pagar-tarjeta><span data-ico="pago"></span>Pagar</button>
+          </div>
+        </div>
+        <div id="nu-resumen"></div>
+      </article>
+
+      <div class="grid2" id="nu-bloques"></div>
+
+      <article class="panel" style="--d:3">
+        <div class="panel-top">
+          <h2>Compras a meses</h2>
+          <button class="btn-sec chico" id="btn-nuevo-plan"><span data-ico="mas"></span>Agregar</button>
+        </div>
+        <div id="lista-planes" class="planes"></div>
+      </article>
+    </section>
+
+    <!-- =================== PRÉSTAMOS =================== -->
+    <section class="vista" id="vista-prestamos">
+      <div class="kpis dos">
+        <article class="kpi" style="--d:0">
+          <div class="kpi-top"><span>Yo debo</span><i class="ico rojo" data-ico="sube"></i></div>
+          <strong id="k-debo">$0.00</strong>
+          <small id="k-debo-sub"></small>
+        </article>
+        <article class="kpi" style="--d:1">
+          <div class="kpi-top"><span>Me deben</span><i class="ico verde" data-ico="baja"></i></div>
+          <strong id="k-medeben">$0.00</strong>
+          <small id="k-medeben-sub"></small>
+        </article>
+      </div>
+      <button class="btn ancho" id="btn-nuevo-prestamo" style="--d:2"><span data-ico="mas"></span>Nuevo préstamo</button>
+      <div id="lista-prestamos" class="prestamos"></div>
+    </section>
+
+    <!-- =================== HISTORIAL =================== -->
+    <section class="vista" id="vista-historial">
+      <div class="filtros" id="filtros" style="--d:0">
+        <button class="filtro activo" data-filtro="todos">Todos</button>
+        <button class="filtro" data-filtro="gasto">Gastos</button>
+        <button class="filtro" data-filtro="ingreso">Ingresos</button>
+        <button class="filtro" data-filtro="pagoTarjeta">Pagos tarjeta</button>
+        <button class="filtro" data-filtro="prestamos">Pagos de préstamos</button>
+      </div>
+      <article class="panel" style="--d:1">
+        <ul id="lista-todos" class="lista"></ul>
+      </article>
+    </section>
+  </main>
+
+  <button id="btn-agregar" class="fab" aria-label="Agregar movimiento"><span data-ico="mas"></span></button>
+
+  <!-- Barra de pestañas de abajo -->
+  <nav class="tabbar">
+    <span class="tab-indicador"></span>
+    <button class="tab activa" data-ir="inicio"><i data-ico="inicio"></i>Inicio</button>
+    <button class="tab" data-ir="tarjeta"><i data-ico="tarjeta"></i>Tarjeta</button>
+    <button class="tab" data-ir="prestamos"><i data-ico="prestamos"></i>Préstamos</button>
+    <button class="tab" data-ir="historial"><i data-ico="historial"></i>Historial</button>
+  </nav>
+
+  <!-- ===== Ventana: nuevo movimiento ===== -->
+  <dialog id="modal" class="hoja">
+    <form id="form">
+      <div class="agarradera"></div>
+      <h3>Nuevo movimiento</h3>
+      <div class="toggle tres">
+        <label><input type="radio" name="tipo" value="gasto" checked><span>Gasto</span></label>
+        <label><input type="radio" name="tipo" value="ingreso"><span>Ingreso</span></label>
+        <label><input type="radio" name="tipo" value="pagoTarjeta"><span>Pago tarjeta</span></label>
+      </div>
+      <p class="ayuda" id="ayuda-pago" hidden>
+        Esto no cuenta como gasto: lo que compraste con la tarjeta ya se contó el día que lo compraste.
+        Solo baja lo que debes.
+      </p>
+      <label class="campo">Monto
+        <input name="monto" type="number" inputmode="decimal" step="0.01" min="0.01" placeholder="0.00" required>
+      </label>
+      <label class="campo" id="campo-categoria">Categoría
+        <select name="categoria"></select>
+      </label>
+      <label class="campo" id="campo-prestamo" hidden>¿De qué préstamo?
+        <select name="prestamo"></select>
+      </label>
+      <label class="campo" id="campo-tarjeta" hidden>¿Qué tarjeta pagas?
+        <select name="tarjeta"></select>
+      </label>
+      <label class="campo" id="campo-metodo"><span id="metodo-etq">¿Con qué pagaste?</span>
+        <select name="metodo"></select>
+      </label>
+      <label class="campo" id="campo-msi" hidden>¿A meses?
+        <select name="msi">
+          <option value="1">No, una sola exhibición</option>
+          <option value="3">3 meses</option>
+          <option value="6">6 meses</option>
+          <option value="9">9 meses</option>
+          <option value="12">12 meses</option>
+          <option value="18">18 meses</option>
+          <option value="24">24 meses</option>
+        </select>
+      </label>
+      <p class="ayuda" id="ayuda-msi" hidden></p>
+      <label class="campo">Fecha
+        <input name="fecha" type="date" required>
+      </label>
+      <label class="campo">Nota (opcional)
+        <input name="nota" type="text" maxlength="60" placeholder="Ej. tacos con amigos">
+      </label>
+      <div class="acciones">
+        <button type="button" class="btn-sec" data-cerrar>Cancelar</button>
+        <button type="submit" class="btn">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===== Ventana: nuevo préstamo ===== -->
+  <dialog id="modal-prestamo" class="hoja">
+    <form id="form-prestamo">
+      <div class="agarradera"></div>
+      <h3>Nuevo préstamo</h3>
+      <div class="toggle">
+        <label><input type="radio" name="direccion" value="debo" checked><span>Yo debo</span></label>
+        <label><input type="radio" name="direccion" value="medeben"><span>Me deben</span></label>
+      </div>
+      <div class="toggle">
+        <label><input type="radio" name="clase" value="persona" checked><span>Persona</span></label>
+        <label><input type="radio" name="clase" value="institucion"><span>Institución</span></label>
+      </div>
+      <label class="campo">Nombre
+        <input name="persona" type="text" maxlength="30" placeholder="Ej. Tía Lupe" required>
+      </label>
+      <div class="dos-campos">
+        <label class="campo">Mensualidad
+          <input name="mensualidad" type="number" inputmode="decimal" step="0.01" min="0.01" placeholder="0.00" required>
+        </label>
+        <label class="campo">Total de meses
+          <input name="meses" type="number" inputmode="numeric" step="1" min="1" placeholder="6" required>
+        </label>
+      </div>
+      <div class="dos-campos">
+        <label class="campo">Fecha del primer pago
+          <input name="inicio" type="date" required>
+        </label>
+        <label class="campo">Pagos que ya hiciste
+          <input name="previos" type="number" inputmode="numeric" step="1" min="0" value="0" required>
+        </label>
+      </div>
+      <p class="ayuda total" id="total-prestamo">Total del préstamo: $0.00</p>
+      <div class="acciones">
+        <button type="button" class="btn-sec" data-cerrar>Cancelar</button>
+        <button type="submit" class="btn">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===== Ventana: configurar tarjeta (saldos iniciales) ===== -->
+  <dialog id="modal-config" class="hoja">
+    <form id="form-config">
+      <div class="agarradera"></div>
+      <h3>Configurar Nu</h3>
+      <p class="ayuda">Copia estos datos de tu app de Nu para que Coco Finanzas arranque con tus números reales.
+        Las compras a meses se agregan aparte, en "Compras a meses".</p>
+      <label class="campo">Límite de crédito total
+        <input name="limite" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00" required>
+      </label>
+      <label class="campo"><span id="etq-corte">Lo que te falta pagar de tu último corte</span>
+        <input name="saldoCorte" type="number" inputmode="decimal" step="0.01" min="0" value="0" required>
+      </label>
+      <label class="campo"><span id="etq-periodo">Lo que llevas gastado después del corte</span>
+        <input name="saldoPeriodo" type="number" inputmode="decimal" step="0.01" min="0" value="0" required>
+      </label>
+      <p class="ayuda total" id="config-suma">Saldo actual: $0.00</p>
+      <div class="acciones">
+        <button type="button" class="btn-sec" data-cerrar>Cancelar</button>
+        <button type="submit" class="btn">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===== Ventana: compra a meses que ya tenías ===== -->
+  <dialog id="modal-plan" class="hoja">
+    <form id="form-plan">
+      <div class="agarradera"></div>
+      <h3>Compra a meses</h3>
+      <p class="ayuda">Para compras a meses que ya tenías. Las nuevas se agregan solas cuando registras un gasto con Nu "a meses".</p>
+      <label class="campo">¿Qué compraste?
+        <input name="descripcion" type="text" maxlength="40" placeholder="Ej. Audífonos" required>
+      </label>
+      <div class="dos-campos">
+        <label class="campo">Mensualidad
+          <input name="mensualidad" type="number" inputmode="decimal" step="0.01" min="0.01" placeholder="0.00" required>
+        </label>
+        <label class="campo">Total de meses
+          <input name="meses" type="number" inputmode="numeric" step="1" min="2" placeholder="6" required>
+        </label>
+      </div>
+      <label class="campo">¿Cuántas mensualidades ya te cobraron? (contando la del último corte)
+        <input name="cobradas" type="number" inputmode="numeric" step="1" min="0" value="1" required>
+      </label>
+      <p class="ayuda total" id="plan-resumen">Te faltan $0.00</p>
+      <div class="acciones">
+        <button type="button" class="btn-sec" data-cerrar>Cancelar</button>
+        <button type="submit" class="btn">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===== Ventana: ajustes y respaldo ===== -->
+  <dialog id="modal-ajustes" class="hoja">
+    <div class="agarradera"></div>
+    <h3>Respaldo de tus datos</h3>
+    <p class="ayuda">Tus datos se guardan solo en este dispositivo. Descarga un respaldo de vez en cuando
+      (por ejemplo cada semana) y guárdalo en iCloud o Drive. Si cambias o pierdes el cel, lo restauras aquí.</p>
+    <p class="ayuda total" id="ultimo-respaldo">Todavía no has hecho ningún respaldo</p>
+    <div class="dos-botones">
+      <button class="btn" id="btn-respaldar"><span data-ico="baja"></span>Descargar respaldo</button>
+      <label class="btn-sec"><span data-ico="sube"></span>Restaurar respaldo
+        <input type="file" id="archivo-respaldo" accept="application/json,.json" hidden>
+      </label>
+    </div>
+    <div class="acciones">
+      <button type="button" class="btn-sec" data-cerrar>Cerrar</button>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status"></div>
+  <canvas id="confeti" aria-hidden="true"></canvas>
+
+  <script src="app.js"></script>
+</body>
+</html>
