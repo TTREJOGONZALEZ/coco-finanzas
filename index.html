@@ -16,6 +16,45 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- ===== Pantalla de bienvenida: el coquito guiña y dice "¡Qué pasooo!" ===== -->
+  <div id="splash" class="splash" aria-hidden="true">
+    <div class="splash-coco">
+      <div class="splash-burbuja">¡Qué pasooo!</div>
+      <svg class="coco-svg" viewBox="0 0 200 200">
+        <g class="c-cuerpo">
+          <g class="c-destellos" stroke="#facc15" stroke-width="7" stroke-linecap="round">
+            <path d="M158 34 L168 18"/><path d="M166 52 L182 42"/><path d="M170 70 L188 68"/>
+          </g>
+          <circle cx="100" cy="114" r="74" fill="#4a2410"/>
+          <circle cx="100" cy="114" r="68" fill="#a0522d"/>
+          <path d="M36 128 A68 68 0 0 0 164 140 A74 74 0 0 1 36 128Z" fill="#7a3b17" opacity=".55"/>
+          <g stroke="#6b3214" stroke-width="3" stroke-linecap="round" opacity=".7">
+            <path d="M55 122 l-4 14"/><path d="M72 162 l-2 12"/><path d="M136 160 l3 12"/>
+            <path d="M152 124 l5 12"/><path d="M48 98 l-6 8"/><path d="M158 96 l6 8"/>
+          </g>
+          <ellipse cx="108" cy="64" rx="44" ry="28" transform="rotate(-12 108 64)" fill="#4a2410"/>
+          <ellipse cx="108" cy="64" rx="39" ry="23" transform="rotate(-12 108 64)" fill="#f8f1ec"/>
+          <ellipse cx="110" cy="64" rx="25" ry="12" transform="rotate(-12 110 64)" fill="#d8c6b9"/>
+          <g class="c-cachetes" fill="#f472b6"><ellipse cx="70" cy="142" rx="11" ry="6"/><ellipse cx="148" cy="136" rx="11" ry="6"/></g>
+          <ellipse class="c-ojo-izq" cx="82" cy="113" rx="6.5" ry="8.5" fill="#1c1917"/>
+          <ellipse class="c-ojo-der" cx="128" cy="108" rx="6.5" ry="8.5" fill="#1c1917"/>
+          <path class="c-guino" d="M119 109 q9 -8 18 0" stroke="#1c1917" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <path class="c-boca" d="M97 156 q13 13 28 -2" stroke="#3b1a0a" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <g class="c-lentes">
+            <path d="M60 106 L38 116" stroke="#111" stroke-width="7" stroke-linecap="round"/>
+            <rect x="57" y="94" width="45" height="30" rx="9" fill="#111"/>
+            <rect x="106" y="88" width="47" height="30" rx="9" fill="#111"/>
+            <path d="M100 105 L108 102" stroke="#111" stroke-width="6"/>
+            <g stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".85">
+              <path d="M69 117 l8 -16"/><path d="M79 117 l8 -16"/><path d="M119 111 l8 -16"/><path d="M129 111 l8 -16"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <small class="splash-saltar">Toca para entrar</small>
+    <div class="splash-toca">Tócame</div>
+  </div>
   <!-- Manchas suaves de color que se mueven en el fondo -->
   <div class="fondo-animado" aria-hidden="true"><span></span><span></span><span></span></div>
 

@@ -966,5 +966,62 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
 // Le pedimos al navegador que no borre nuestros datos para liberar espacio
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 
-// ---------- 11. Arrancar ----------
+// ---------- 11. Bienvenida: el coquito guiña y dice "¡Qué pasooo!" con tu voz ----------
+function bienvenida() {
+  const s = $('splash');
+  if (!s) return;
+  const rapido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const animaciones = () => s.getAnimations({ subtree: true });
+  let terminado = false, esperandoToque = false, temporizador;
+
+  // Cargamos tu voz como "blob" (así también suena sin internet en el iPhone)
+  const voz = new Audio();
+  const vozLista = fetch('voz.mp3')
+    .then(r => (r.ok ? r.blob() : Promise.reject()))
+    .then(b => { voz.src = URL.createObjectURL(b); voz.load(); })
+    .catch(() => null);
+
+  function terminar() {
+    if (terminado) return;
+    terminado = true;
+    clearTimeout(temporizador);
+    s.classList.add('saliendo');
+    // que la app haga su animación de entrada justo cuando se va la bienvenida
+    const vista = document.querySelector('.vista.activa');
+    vista.classList.remove('activa'); void vista.offsetWidth; vista.classList.add('activa');
+    setTimeout(() => s.remove(), 450);
+  }
+  const terminarEn = ms => { clearTimeout(temporizador); temporizador = setTimeout(terminar, ms); };
+
+  // Justo antes del guiño intentamos que hable
+  setTimeout(async () => {
+    if (terminado) return;
+    await vozLista;
+    if (!voz.src) return;                    // no hay audio: la animación sigue sin voz
+    voz.play().catch(err => {
+      if (terminado || err.name !== 'NotAllowedError') return;
+      // El iPhone no deja sonar sin un toque: el coco se queda esperando a que lo toques
+      esperandoToque = true;
+      animaciones().forEach(a => a.pause());
+      clearTimeout(temporizador);
+      s.classList.add('esperando');
+    });
+  }, rapido ? 0 : 1150);
+
+  s.addEventListener('click', () => {
+    if (esperandoToque) {                    // lo tocaste: ahora sí guiña y habla
+      esperandoToque = false;
+      s.classList.remove('esperando');
+      voz.play().catch(() => {});
+      animaciones().forEach(a => a.play());
+      terminarEn(1800);
+      return;
+    }
+    terminar();                              // cualquier otro toque: saltar
+  });
+  terminarEn(rapido ? 900 : 2900);
+}
+
+// ---------- 12. Arrancar ----------
+bienvenida();
 pintar();
