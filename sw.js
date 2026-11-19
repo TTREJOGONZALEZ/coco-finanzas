@@ -4,7 +4,7 @@
 //  Estrategia: si hay internet, trae la versión más nueva (y la guarda);
 //  si no hay, usa la copia guardada.
 // =====================================================
-const CACHE = 'coco-finanzas-v2';
+const CACHE = 'coco-finanzas-v3';
 const ARCHIVOS = [
   './', './index.html', './styles.css', './app.js', './manifest.json',
   './logo.png', './icon-192.png', './icon-512.png', './apple-touch-icon.png',
@@ -22,17 +22,40 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
+// Busca un archivo en la copia guardada.
+// Si lo que se pide es la página (abrir la app), siempre hay respaldo: index.html
+async function desdeCopia(request) {
+  const c = await caches.open(CACHE);
+  const r = await c.match(request, { ignoreSearch: true });
+  if (r) return r;
+  if (request.mode === 'navigate') {
+    return (await c.match('./index.html')) || (await c.match('./'));
+  }
+  return undefined;
+}
+
 // Cada vez que la app pide un archivo
 self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET' || !e.request.url.startsWith(self.location.origin)) return;
-  const deRed = fetch(e.request).then(r => {
-    if (r.ok) { const copia = r.clone(); caches.open(CACHE).then(c => c.put(e.request, copia)); }
-    return r;
-  });
-  // si el internet tarda más de 3 segundos, usamos la copia guardada
-  const tiempo = new Promise((_, rechazar) => setTimeout(rechazar, 3000));
-  e.respondWith(
-    Promise.race([deRed, tiempo]).catch(() =>
-      caches.match(e.request, { ignoreSearch: true }).then(r => r || deRed))
-  );
+  const req = e.request;
+  if (req.method !== 'GET' || !req.url.startsWith(self.location.origin)) return;
+
+  e.respondWith((async () => {
+    try {
+      // intentamos traer la versión nueva, pero sin esperar más de 3 segundos
+      const r = await Promise.race([
+        fetch(req),
+        new Promise((_, rechazar) => setTimeout(() => rechazar(new Error('lento')), 3000)),
+      ]);
+      if (r && r.ok) {
+        const copia = r.clone();
+        caches.open(CACHE).then(c => c.put(req, copia));
+        return r;
+      }
+      return (await desdeCopia(req)) || r;
+    } catch {
+      // sin internet (o muy lento): usamos la copia guardada
+      const r = await desdeCopia(req);
+      return r || new Response('Sin conexión', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+    }
+  })());
 });
