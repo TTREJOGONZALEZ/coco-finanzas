@@ -4,10 +4,10 @@
 //  Estrategia: si hay internet, trae la versión más nueva (y la guarda);
 //  si no hay, usa la copia guardada.
 // =====================================================
-const CACHE = 'coco-finanzas-v1';
+const CACHE = 'coco-finanzas-v2';
 const ARCHIVOS = [
   './', './index.html', './styles.css', './app.js', './manifest.json',
-  './img/logo.png', './img/icon-192.png', './img/icon-512.png', './img/apple-touch-icon.png',
+  './logo.png', './icon-192.png', './icon-512.png', './apple-touch-icon.png',
 ];
 
 // Al instalarse: guarda los archivos de la app
